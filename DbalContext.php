@@ -117,7 +117,7 @@ class DbalContext implements Context
         }
 
         if (isset($this->config['redelivery_delay'])) {
-            $consumer->setRedeliveryDelay($this->config['redelivery_delay']);
+            $consumer->setRedeliveryDelay((int) $this->config['redelivery_delay']);
         }
 
         return $consumer;
