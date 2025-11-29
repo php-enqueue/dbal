@@ -86,7 +86,16 @@ class DbalConnectionFactory implements ConnectionFactory
     {
         if (false == $this->connection) {
             $this->connection = DriverManager::getConnection($this->config['connection']);
-            $this->connection->getServerVersion(); // calls connect() internally
+            if (
+                method_exists($this->connection, 'connect')
+                && (new \ReflectionMethod($this->connection, 'connect'))->isPublic()
+            ) {
+                // DBAL < 4
+                $this->connection->connect();
+            } else {
+                // DBAL >= 4
+                $this->connection->getServerVersion(); // calls connect() internally
+            }
         }
 
         return $this->connection;
