@@ -61,7 +61,13 @@ class ManagerRegistryConnectionFactory implements ConnectionFactory
     {
         /** @var Connection $connection */
         $connection = $this->registry->getConnection($this->config['connection_name']);
-        $connection->getServerVersion(); // calls connect() internally
+        if (method_exists($connection, 'connect')) {
+            // DBAL < 4
+            $connection->connect();
+        } else {
+            // DBAL >= 4, calls connect() internally
+            $connection->getServerVersion();
+        }
 
         return $connection;
     }
