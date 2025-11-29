@@ -59,8 +59,9 @@ class ManagerRegistryConnectionFactory implements ConnectionFactory
 
     private function establishConnection(): Connection
     {
+        /** @var Connection $connection */
         $connection = $this->registry->getConnection($this->config['connection_name']);
-        $connection->connect();
+        $connection->getServerVersion(); // calls connect() internally
 
         return $connection;
     }
