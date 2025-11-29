@@ -8,7 +8,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Context;
-use ReflectionMethod;
 
 class ManagerRegistryConnectionFactory implements ConnectionFactory
 {
@@ -64,7 +63,7 @@ class ManagerRegistryConnectionFactory implements ConnectionFactory
         $connection = $this->registry->getConnection($this->config['connection_name']);
         if (
             method_exists($connection, 'connect')
-            && (new ReflectionMethod($connection, 'connect'))->isPublic()
+            && (new \ReflectionMethod($connection, 'connect'))->isPublic()
         ) {
             // DBAL < 4
             $connection->connect();
