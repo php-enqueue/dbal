@@ -6,6 +6,7 @@ namespace Enqueue\Dbal;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
 use Enqueue\Dsn\Dsn;
 use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Context;
@@ -142,13 +143,35 @@ class DbalConnectionFactory implements ConnectionFactory
             ];
         }
 
+        if (class_exists(DsnParser::class)) { // DBAL >= 4
+            if ($dsnHasProtocolOnly) {
+                $dsn = $parsedDsn->getScheme().'://root@localhost';
+            }
+
+            $doctrineSupported = [];
+            foreach ($supported as $k => $v) {
+                $doctrineSupported[$this->prepareDsnForDoctrine($k)] = $this->prepareDsnForDoctrine($v);
+            }
+            $dsnParser = new DsnParser($doctrineSupported);
+
+            return [
+                'lazy' => true,
+                'connection' => $dsnParser->parse($this->prepareDsnForDoctrine($dsn)),
+            ];
+        }
+
+        $dsn = $dsnHasProtocolOnly ?
+            $doctrineScheme.'://root@localhost' :
+            str_replace($parsedDsn->getScheme(), $doctrineScheme, $dsn);
+
         return [
             'lazy' => true,
-            'connection' => [
-                'url' => $dsnHasProtocolOnly ?
-                    $doctrineScheme.'://root@localhost' :
-                    str_replace($parsedDsn->getScheme(), $doctrineScheme, $dsn),
-            ],
+            'connection' => ['url' => $dsn],
         ];
+    }
+
+    private function prepareDsnForDoctrine(string $dsn): string
+    {
+        return preg_replace('/^([a-z0-9]+)\+pdo/i', 'pdo-$1', $dsn);
     }
 }

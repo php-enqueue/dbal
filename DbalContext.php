@@ -209,7 +209,7 @@ class DbalContext implements Context
 
     public function createDataBaseTable(): void
     {
-        $sm = $this->getDbalConnection()->getSchemaManager();
+        $sm = $this->getDbalConnection()->createSchemaManager();
 
         if ($sm->tablesExist([$this->getTableName()])) {
             return;
@@ -223,7 +223,7 @@ class DbalContext implements Context
         $table->addColumn('headers', DbalType::TEXT, ['notnull' => false]);
         $table->addColumn('properties', DbalType::TEXT, ['notnull' => false]);
         $table->addColumn('redelivered', DbalType::BOOLEAN, ['notnull' => false]);
-        $table->addColumn('queue', DbalType::STRING);
+        $table->addColumn('queue', DbalType::STRING, ['length' => 255]);
         $table->addColumn('priority', DbalType::SMALLINT, ['notnull' => false]);
         $table->addColumn('delayed_until', DbalType::BIGINT, ['notnull' => false]);
         $table->addColumn('time_to_live', DbalType::BIGINT, ['notnull' => false]);
