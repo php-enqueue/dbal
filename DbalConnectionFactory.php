@@ -106,18 +106,21 @@ class DbalConnectionFactory implements ConnectionFactory
     {
         $parsedDsn = Dsn::parseFirst($dsn);
 
+        // enqueue scheme => dbal scheme
+        // out of the box dbal 4 schemes: pdo_mysql, pdo_sqlite, pdo_pgsql, pdo_oci, oci8, ibm_db2, pdo_sqlsrv, mysqli, pgsql, sqlsrv, sqlite3
+        // in case of multiple drivers like mysqli vs pdo_mysql the pdo variant is preferred
         $supported = [
-            'db2' => 'db2',
-            'ibm-db2' => 'ibm-db2',
-            'mssql' => 'mssql',
+            'db2' => 'ibm_db2',
+            'ibm-db2' => 'ibm_db2',
+            'mssql' => 'pdo_sqlsrv',
             'sqlsrv+pdo' => 'pdo_sqlsrv',
-            'mysql' => 'mysql',
-            'mysql2' => 'mysql2',
+            'mysql' => 'pdo_mysql',
+            'mysql2' => 'mysqli',
             'mysql+pdo' => 'pdo_mysql',
             'pgsql' => 'pgsql',
-            'postgres' => 'postgres',
+            'postgres' => 'pdo_pgsql',
             'pgsql+pdo' => 'pdo_pgsql',
-            'sqlite' => 'sqlite',
+            'sqlite' => 'sqlite3',
             'sqlite3' => 'sqlite3',
             'sqlite+pdo' => 'pdo_sqlite',
         ];
@@ -148,15 +151,11 @@ class DbalConnectionFactory implements ConnectionFactory
                 $dsn = $parsedDsn->getScheme().'://root@localhost';
             }
 
-            $doctrineSupported = [];
-            foreach ($supported as $k => $v) {
-                $doctrineSupported[$this->prepareDsnForDoctrine($k)] = $this->prepareDsnForDoctrine($v);
-            }
-            $dsnParser = new DsnParser($doctrineSupported);
+            $dsnParser = new DsnParser($supported);
 
             return [
                 'lazy' => true,
-                'connection' => $dsnParser->parse($this->prepareDsnForDoctrine($dsn)),
+                'connection' => $dsnParser->parse($dsn),
             ];
         }
 
@@ -168,10 +167,5 @@ class DbalConnectionFactory implements ConnectionFactory
             'lazy' => true,
             'connection' => ['url' => $dsn],
         ];
-    }
-
-    private function prepareDsnForDoctrine(string $dsn): string
-    {
-        return preg_replace('/^([a-z0-9]+)\+pdo/i', 'pdo-$1', $dsn);
     }
 }
