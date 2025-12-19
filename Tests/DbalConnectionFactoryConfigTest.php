@@ -56,7 +56,9 @@ class DbalConnectionFactoryConfigTest extends TestCase
             null,
             [
                 'connection' => [
-                    'url' => 'mysql://root@localhost',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'localhost',
+                    'user' => 'root',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -68,7 +70,9 @@ class DbalConnectionFactoryConfigTest extends TestCase
             'mysql:',
             [
                 'connection' => [
-                    'url' => 'mysql://root@localhost',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'localhost',
+                    'user' => 'root',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -80,7 +84,9 @@ class DbalConnectionFactoryConfigTest extends TestCase
             'mysql+pdo:',
             [
                 'connection' => [
-                    'url' => 'pdo_mysql://root@localhost',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'localhost',
+                    'user' => 'root',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -92,7 +98,9 @@ class DbalConnectionFactoryConfigTest extends TestCase
             'pgsql:',
             [
                 'connection' => [
-                    'url' => 'pgsql://root@localhost',
+                    'driver' => 'pgsql',
+                    'host' => 'localhost',
+                    'user' => 'root',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -158,7 +166,12 @@ class DbalConnectionFactoryConfigTest extends TestCase
             [
                 'connection' => [
                     'foo' => 'fooValue',
-                    'url' => 'pdo_mysql://user:pass@host:10000/db',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'host',
+                    'port' => 10000,
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'dbname' => 'db',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -171,6 +184,12 @@ class DbalConnectionFactoryConfigTest extends TestCase
             [
                 'connection' => [
                     'url' => 'mysql://user:pass@host:10000/db',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'host',
+                    'port' => 10000,
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'dbname' => 'db',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -182,7 +201,12 @@ class DbalConnectionFactoryConfigTest extends TestCase
             'mysql+pdo://user:pass@host:10001/db',
             [
                 'connection' => [
-                    'url' => 'pdo_mysql://user:pass@host:10001/db',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'host',
+                    'port' => 10001,
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'dbname' => 'db',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -194,7 +218,9 @@ class DbalConnectionFactoryConfigTest extends TestCase
             [],
             [
                 'connection' => [
-                    'url' => 'mysql://root@localhost',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'localhost',
+                    'user' => 'root',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,
@@ -219,7 +245,12 @@ class DbalConnectionFactoryConfigTest extends TestCase
             ['dsn' => 'mysql+pdo://user:pass@host:10001/db', 'foo' => 'fooVal'],
             [
                 'connection' => [
-                    'url' => 'pdo_mysql://user:pass@host:10001/db',
+                    'driver' => 'pdo_mysql',
+                    'host' => 'host',
+                    'port' => 10001,
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'dbname' => 'db',
                 ],
                 'table_name' => 'enqueue',
                 'polling_interval' => 1000,

@@ -41,8 +41,8 @@ class DbalConnectionFactoryTest extends TestCase
 
         $config = $context->getConfig();
         $this->assertArrayHasKey('connection', $config);
-        $this->assertArrayHasKey('url', $config['connection']);
-        $this->assertEquals('pdo_pgsql://foo@bar', $config['connection']['url']);
+        $this->assertArrayHasKey('driver', $config['connection']);
+        $this->assertEquals('pdo_pgsql', $config['connection']['driver']);
     }
 
     public function testShouldParseSqliteAbsolutePathDSN()
@@ -55,7 +55,7 @@ class DbalConnectionFactoryTest extends TestCase
 
         $config = $context->getConfig();
         $this->assertArrayHasKey('connection', $config);
-        $this->assertArrayHasKey('url', $config['connection']);
+        $this->assertArrayHasKey('driver', $config['connection']);
         $this->assertEquals('pdo_sqlite:////tmp/some.sq3', $config['connection']['url']);
     }
 }
