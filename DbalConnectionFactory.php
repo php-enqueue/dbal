@@ -153,6 +153,13 @@ class DbalConnectionFactory implements ConnectionFactory
 
             $dsnParser = new DsnParser($supported);
 
+            // replace scheme with the matching one from the supported list, but the prefixes there are "pdo-" not "pdo_"
+            $dsn = preg_replace(
+                '/^' . preg_quote($parsedDsn->getScheme(), '/') . '(:|:\/\/)/',
+                str_replace('_','-', $supported[$parsedDsn->getScheme()]) . '$1',
+                $dsn,
+            );
+
             return [
                 'lazy' => true,
                 'connection' => $dsnParser->parse($dsn),

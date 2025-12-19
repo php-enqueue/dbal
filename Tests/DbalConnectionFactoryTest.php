@@ -55,7 +55,7 @@ class DbalConnectionFactoryTest extends TestCase
 
         $config = $context->getConfig();
         $this->assertArrayHasKey('connection', $config);
-        $this->assertArrayHasKey('driver', $config['connection']);
-        $this->assertEquals('pdo_sqlite:////tmp/some.sq3', $config['connection']['url']);
+        $this->assertArrayHasKey('path', $config['connection']);
+        $this->assertEquals('/tmp/some.sq3', $config['connection']['path']);
     }
 }
