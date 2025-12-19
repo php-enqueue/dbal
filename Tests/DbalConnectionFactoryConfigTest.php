@@ -183,7 +183,6 @@ class DbalConnectionFactoryConfigTest extends TestCase
             'mysql://user:pass@host:10000/db',
             [
                 'connection' => [
-                    'url' => 'mysql://user:pass@host:10000/db',
                     'driver' => 'pdo_mysql',
                     'host' => 'host',
                     'port' => 10000,
