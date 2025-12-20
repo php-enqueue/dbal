@@ -91,6 +91,7 @@ class DbalConnectionFactory implements ConnectionFactory
                 method_exists($this->connection, 'connect')
                 && (new \ReflectionMethod($this->connection, 'connect'))->isPublic()
             ) {
+                // TODO: remove check when dropping support for DBAL < 4
                 // DBAL < 4
                 $this->connection->connect();
             } else {

@@ -2,6 +2,7 @@
 
 namespace Enqueue\Dbal\Tests;
 
+use Doctrine\DBAL\Connection;
 use Enqueue\Dbal\DbalConnectionFactory;
 use Enqueue\Test\ClassExtensionTrait;
 use Enqueue\Test\ReadAttributeTrait;
@@ -52,210 +53,396 @@ class DbalConnectionFactoryConfigTest extends TestCase
 
     public static function provideConfigs()
     {
-        yield [
-            null,
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'user' => 'root',
-                ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+        // TODO: remove check when dropping support for DBAL < 4
+        if (
+            method_exists(Connection::class, 'connect')
+            && (new \ReflectionMethod(Connection::class, 'connect'))->isPublic()
+        ) {
+            // DBAL < 4
 
-        yield [
-            'mysql:',
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'user' => 'root',
+            yield [
+                null,
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://root@localhost'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            'mysql+pdo:',
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'user' => 'root',
+            yield [
+                'mysql:',
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://root@localhost'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            'pgsql:',
-            [
-                'connection' => [
-                    'driver' => 'pgsql',
-                    'host' => 'localhost',
-                    'user' => 'root',
+            yield [
+                'mysql+pdo:',
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://root@localhost'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            [
-                'dsn' => 'mysql+pdo:',
-                'connection' => [
-                    'dbname' => 'customDbName',
+            yield [
+                'pgsql:',
+                [
+                    'connection' => [
+                        'url' => 'pgsql://root@localhost'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-            ],
-            [
-                'connection' => [
-                    'dbname' => 'customDbName',
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'port' => '3306',
-                    'user' => 'root',
-                    'password' => '',
-                ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            [
-                'dsn' => 'mysql+pdo:',
-                'connection' => [
-                    'dbname' => 'customDbName',
-                    'host' => 'host',
-                    'port' => '10000',
-                    'user' => 'user',
-                    'password' => 'pass',
+            yield [
+                [
+                    'dsn' => 'mysql+pdo:',
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                    ],
                 ],
-            ],
-            [
-                'connection' => [
-                    'dbname' => 'customDbName',
-                    'host' => 'host',
-                    'port' => '10000',
-                    'user' => 'user',
-                    'password' => 'pass',
-                    'driver' => 'pdo_mysql',
+                [
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'port' => '3306',
+                        'user' => 'root',
+                        'password' => '',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            [
-                'dsn' => 'mysql+pdo://user:pass@host:10000/db',
-                'connection' => [
-                    'foo' => 'fooValue',
+            yield [
+                [
+                    'dsn' => 'mysql+pdo:',
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                        'host' => 'host',
+                        'port' => '10000',
+                        'user' => 'user',
+                        'password' => 'pass',
+                    ],
                 ],
-            ],
-            [
-                'connection' => [
-                    'foo' => 'fooValue',
-                    'driver' => 'pdo_mysql',
-                    'host' => 'host',
-                    'port' => 10000,
-                    'user' => 'user',
-                    'password' => 'pass',
-                    'dbname' => 'db',
+                [
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                        'host' => 'host',
+                        'port' => '10000',
+                        'user' => 'user',
+                        'password' => 'pass',
+                        'driver' => 'pdo_mysql',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            'mysql://user:pass@host:10000/db',
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'host',
-                    'port' => 10000,
-                    'user' => 'user',
-                    'password' => 'pass',
-                    'dbname' => 'db',
+            yield [
+                [
+                    'dsn' => 'mysql+pdo://user:pass@host:10000/db',
+                    'connection' => [
+                        'foo' => 'fooValue',
+                    ],
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
-
-        yield [
-            'mysql+pdo://user:pass@host:10001/db',
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'host',
-                    'port' => 10001,
-                    'user' => 'user',
-                    'password' => 'pass',
-                    'dbname' => 'db',
+                [
+                    'connection' => [
+                        'foo' => 'fooValue',
+                        'url' => 'pdo_mysql://user:pass@host:10000/db'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            [],
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
-                    'user' => 'root',
+            yield [
+                'mysql://user:pass@host:10000/db',
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://user:pass@host:10000/db'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
+            ];
 
-        yield [
-            [
-                'connection' => ['foo' => 'fooVal', 'bar' => 'barVal'],
-                'table_name' => 'a_queue_table',
-            ],
-            [
-                'connection' => ['foo' => 'fooVal', 'bar' => 'barVal'],
-                'table_name' => 'a_queue_table',
-                'polling_interval' => 1000,
-                'lazy' => true,
-            ],
-        ];
-
-        yield [
-            ['dsn' => 'mysql+pdo://user:pass@host:10001/db', 'foo' => 'fooVal'],
-            [
-                'connection' => [
-                    'driver' => 'pdo_mysql',
-                    'host' => 'host',
-                    'port' => 10001,
-                    'user' => 'user',
-                    'password' => 'pass',
-                    'dbname' => 'db',
+            yield [
+                'mysql+pdo://user:pass@host:10001/db',
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://user:pass@host:10001/db'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
                 ],
-                'table_name' => 'enqueue',
-                'polling_interval' => 1000,
-                'lazy' => true,
-                'foo' => 'fooVal',
-            ],
-        ];
+            ];
+
+            yield [
+                [],
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://root@localhost',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                [
+                    'connection' => ['foo' => 'fooVal', 'bar' => 'barVal'],
+                    'table_name' => 'a_queue_table',
+                ],
+                [
+                    'connection' => ['foo' => 'fooVal', 'bar' => 'barVal'],
+                    'table_name' => 'a_queue_table',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                ['dsn' => 'mysql+pdo://user:pass@host:10001/db', 'foo' => 'fooVal'],
+                [
+                    'connection' => [
+                        'url' => 'pdo_mysql://user:pass@host:10001/db'
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                    'foo' => 'fooVal',
+                ],
+            ];
+        } else {
+            // DBAL >= 4
+
+            yield [
+                null,
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'user' => 'root',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                'mysql:',
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'user' => 'root',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                'mysql+pdo:',
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'user' => 'root',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                'pgsql:',
+                [
+                    'connection' => [
+                        'driver' => 'pgsql',
+                        'host' => 'localhost',
+                        'user' => 'root',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                [
+                    'dsn' => 'mysql+pdo:',
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                    ],
+                ],
+                [
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'port' => '3306',
+                        'user' => 'root',
+                        'password' => '',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                [
+                    'dsn' => 'mysql+pdo:',
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                        'host' => 'host',
+                        'port' => '10000',
+                        'user' => 'user',
+                        'password' => 'pass',
+                    ],
+                ],
+                [
+                    'connection' => [
+                        'dbname' => 'customDbName',
+                        'host' => 'host',
+                        'port' => '10000',
+                        'user' => 'user',
+                        'password' => 'pass',
+                        'driver' => 'pdo_mysql',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                [
+                    'dsn' => 'mysql+pdo://user:pass@host:10000/db',
+                    'connection' => [
+                        'foo' => 'fooValue',
+                    ],
+                ],
+                [
+                    'connection' => [
+                        'foo' => 'fooValue',
+                        'driver' => 'pdo_mysql',
+                        'host' => 'host',
+                        'port' => 10000,
+                        'user' => 'user',
+                        'password' => 'pass',
+                        'dbname' => 'db',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                'mysql://user:pass@host:10000/db',
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'host',
+                        'port' => 10000,
+                        'user' => 'user',
+                        'password' => 'pass',
+                        'dbname' => 'db',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                'mysql+pdo://user:pass@host:10001/db',
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'host',
+                        'port' => 10001,
+                        'user' => 'user',
+                        'password' => 'pass',
+                        'dbname' => 'db',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                [],
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'user' => 'root',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                [
+                    'connection' => ['foo' => 'fooVal', 'bar' => 'barVal'],
+                    'table_name' => 'a_queue_table',
+                ],
+                [
+                    'connection' => ['foo' => 'fooVal', 'bar' => 'barVal'],
+                    'table_name' => 'a_queue_table',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                ],
+            ];
+
+            yield [
+                ['dsn' => 'mysql+pdo://user:pass@host:10001/db', 'foo' => 'fooVal'],
+                [
+                    'connection' => [
+                        'driver' => 'pdo_mysql',
+                        'host' => 'host',
+                        'port' => 10001,
+                        'user' => 'user',
+                        'password' => 'pass',
+                        'dbname' => 'db',
+                    ],
+                    'table_name' => 'enqueue',
+                    'polling_interval' => 1000,
+                    'lazy' => true,
+                    'foo' => 'fooVal',
+                ],
+            ];
+        }
     }
 }
