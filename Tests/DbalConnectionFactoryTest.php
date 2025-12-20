@@ -50,7 +50,7 @@ class DbalConnectionFactoryTest extends TestCase
         ) {
             // DBAL < 4
             $this->assertArrayHasKey('url', $config['connection']);
-            $this->assertEquals('pdo-pgsql://foo@bar', $config['connection']['url']);
+            $this->assertEquals('pdo_pgsql://foo@bar', $config['connection']['url']);
         } else {
             // DBAL >= 4
             $this->assertArrayHasKey('driver', $config['connection']);
@@ -76,7 +76,7 @@ class DbalConnectionFactoryTest extends TestCase
         ) {
             // DBAL < 4
             $this->assertArrayHasKey('url', $config['connection']);
-            $this->assertEquals('pdo-sqlite:////tmp/some.sq3', $config['connection']['url']);
+            $this->assertEquals('pdo_sqlite:////tmp/some.sq3', $config['connection']['url']);
         } else {
             // DBAL >= 4
             $this->assertArrayHasKey('path', $config['connection']);

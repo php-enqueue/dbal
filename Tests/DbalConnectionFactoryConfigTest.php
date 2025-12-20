@@ -64,7 +64,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 null,
                 [
                     'connection' => [
-                        'url' => 'pdo_mysql://root@localhost'
+                        'url' => 'pdo_mysql://root@localhost',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -76,7 +76,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 'mysql:',
                 [
                     'connection' => [
-                        'url' => 'pdo_mysql://root@localhost'
+                        'url' => 'pdo_mysql://root@localhost',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -88,7 +88,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 'mysql+pdo:',
                 [
                     'connection' => [
-                        'url' => 'pdo_mysql://root@localhost'
+                        'url' => 'pdo_mysql://root@localhost',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -100,7 +100,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 'pgsql:',
                 [
                     'connection' => [
-                        'url' => 'pgsql://root@localhost'
+                        'url' => 'pgsql://root@localhost',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -166,7 +166,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 [
                     'connection' => [
                         'foo' => 'fooValue',
-                        'url' => 'pdo_mysql://user:pass@host:10000/db'
+                        'url' => 'pdo_mysql://user:pass@host:10000/db',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -178,7 +178,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 'mysql://user:pass@host:10000/db',
                 [
                     'connection' => [
-                        'url' => 'pdo_mysql://user:pass@host:10000/db'
+                        'url' => 'pdo_mysql://user:pass@host:10000/db',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -190,7 +190,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 'mysql+pdo://user:pass@host:10001/db',
                 [
                     'connection' => [
-                        'url' => 'pdo_mysql://user:pass@host:10001/db'
+                        'url' => 'pdo_mysql://user:pass@host:10001/db',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
@@ -227,7 +227,7 @@ class DbalConnectionFactoryConfigTest extends TestCase
                 ['dsn' => 'mysql+pdo://user:pass@host:10001/db', 'foo' => 'fooVal'],
                 [
                     'connection' => [
-                        'url' => 'pdo_mysql://user:pass@host:10001/db'
+                        'url' => 'pdo_mysql://user:pass@host:10001/db',
                     ],
                     'table_name' => 'enqueue',
                     'polling_interval' => 1000,
