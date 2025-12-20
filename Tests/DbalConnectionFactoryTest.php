@@ -2,7 +2,6 @@
 
 namespace Enqueue\Dbal\Tests;
 
-use Doctrine\DBAL\Connection;
 use Enqueue\Dbal\DbalConnectionFactory;
 use Enqueue\Dbal\DbalContext;
 use Enqueue\Test\ClassExtensionTrait;
@@ -43,19 +42,8 @@ class DbalConnectionFactoryTest extends TestCase
         $config = $context->getConfig();
         $this->assertArrayHasKey('connection', $config);
 
-        // TODO: remove check when dropping support for DBAL < 4
-        if (
-            method_exists(Connection::class, 'connect')
-            && (new \ReflectionMethod(Connection::class, 'connect'))->isPublic()
-        ) {
-            // DBAL < 4
-            $this->assertArrayHasKey('url', $config['connection']);
-            $this->assertEquals('pdo_pgsql://foo@bar', $config['connection']['url']);
-        } else {
-            // DBAL >= 4
-            $this->assertArrayHasKey('driver', $config['connection']);
-            $this->assertEquals('pdo_pgsql', $config['connection']['driver']);
-        }
+        $this->assertArrayHasKey('driver', $config['connection']);
+        $this->assertEquals('pdo_pgsql', $config['connection']['driver']);
     }
 
     public function testShouldParseSqliteAbsolutePathDSN()
@@ -69,18 +57,7 @@ class DbalConnectionFactoryTest extends TestCase
         $config = $context->getConfig();
         $this->assertArrayHasKey('connection', $config);
 
-        // TODO: remove check when dropping support for DBAL < 4
-        if (
-            method_exists(Connection::class, 'connect')
-            && (new \ReflectionMethod(Connection::class, 'connect'))->isPublic()
-        ) {
-            // DBAL < 4
-            $this->assertArrayHasKey('url', $config['connection']);
-            $this->assertEquals('pdo_sqlite:////tmp/some.sq3', $config['connection']['url']);
-        } else {
-            // DBAL >= 4
-            $this->assertArrayHasKey('path', $config['connection']);
-            $this->assertEquals('/tmp/some.sq3', $config['connection']['path']);
-        }
+        $this->assertArrayHasKey('path', $config['connection']);
+        $this->assertEquals('/tmp/some.sq3', $config['connection']['path']);
     }
 }
